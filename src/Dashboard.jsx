@@ -147,7 +147,7 @@ export default function Dashboard() {
           />
           <ChartCard
             title="Meetings count"
-            subtitle="New deals created by AEs per week"
+            subtitle="New deals created"
             color="#FF9F40"
             dataKey="meetings_count"
             data={data}
@@ -168,3 +168,4 @@ export default function Dashboard() {
     </div>
   );
 }
+
