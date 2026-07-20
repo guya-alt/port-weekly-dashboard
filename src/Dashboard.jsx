@@ -54,15 +54,17 @@ export default function Dashboard() {
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
-      const sorted = [...json].sort((a, b) => (a.week_start || '').localeCompare(b.week_start || ''));
+      // Sort oldest first, exclude any row where cumulative_arr is missing or week has zeros across all metrics
+      const today = new Date().toISOString().substring(0, 10);
+      const sorted = [...json]
+        .filter(r => r.week_start && r.week_start < today)
+        .sort((a, b) => a.week_start.localeCompare(b.week_start));
       setData(sorted);
       setLastUpdate(new Date().toLocaleString('en-IL', { timeZone: 'Asia/Jerusalem' }));
       setError(null);
     } catch (err) { setError(err.message); }
     finally { setLoading(false); }
   };
-
-  const latestArr = data.length ? data[data.length - 1]?.cumulative_arr : null;
 
   if (loading && data.length === 0) return <div style={{ padding: '32px', textAlign: 'center' }}>Loading...</div>;
 
@@ -71,7 +73,7 @@ export default function Dashboard() {
       <div style={{ marginBottom: '20px' }}>
         <h1 style={{ margin: '0 0 4px 0', fontSize: '20px', fontWeight: '500', color: '#0b0b0b' }}>Weekly metrics dashboard</h1>
         <p style={{ margin: '0', fontSize: '12px', color: '#52514e' }}>
-          15-week view • Port.io sales metrics
+          {data.length}-week view • Port.io sales metrics
           {lastUpdate && <span style={{ color: '#898781' }}> • Updated: {lastUpdate}</span>}
         </p>
         {error && <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#d03b3b' }}>⚠ {error}</p>}
@@ -81,32 +83,10 @@ export default function Dashboard() {
         <div style={{ textAlign: 'center', padding: '32px', color: '#d03b3b' }}>No data</div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-          <ChartCard
-            title="ARR trend"
-            color="#4BC0C0"
-            dataKey="cumulative_arr"
-            data={data}
-            formatter={fmt}
-          />
-          <ChartCard
-            title="Opp ARR"
-            color="#36A2EB"
-            dataKey="opp_arr"
-            data={data}
-            formatter={fmt}
-          />
-          <ChartCard
-            title="Meetings count"
-            color="#FF9F40"
-            dataKey="meetings_count"
-            data={data}
-          />
-          <ChartCard
-            title="New signups"
-            color="#9966FF"
-            dataKey="new_signup_count"
-            data={data}
-          />
+          <ChartCard title="ARR trend" color="#4BC0C0" dataKey="cumulative_arr" data={data} formatter={fmt} />
+          <ChartCard title="Opp ARR" color="#36A2EB" dataKey="opp_arr" data={data} formatter={fmt} />
+          <ChartCard title="Meetings count" color="#FF9F40" dataKey="meetings_count" data={data} />
+          <ChartCard title="New signups" color="#9966FF" dataKey="new_signup_count" data={data} />
         </div>
       )}
 
