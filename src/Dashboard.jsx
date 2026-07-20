@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer } from 'recharts';
 
 const fmt = (v) => {
-  if (v === null || v === undefined || v === 0) return '$0';
+  if (v === null || v === undefined) return '$0';
   const abs = Math.abs(v);
   const sign = v < 0 ? '-' : '';
   if (abs >= 1000000) return `${sign}$${(abs / 1000000).toFixed(1)}M`;
@@ -18,19 +18,15 @@ const ChartCard = ({ title, children }) => (
 );
 
 const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div style={{ background: '#fcfcfb', border: '1px solid #e1e0d9', borderRadius: '4px', padding: '8px 12px', fontSize: '12px', color: '#0b0b0b' }}>
-        <div style={{ fontWeight: '500', marginBottom: '4px' }}>{label}</div>
-        {payload.map((entry, i) => (
-          <div key={i} style={{ color: entry.color }}>
-            {entry.name}: {typeof entry.value === 'number' && entry.value > 1000 ? fmt(entry.value) : entry.value}
-          </div>
-        ))}
-      </div>
-    );
-  }
-  return null;
+  if (!active || !payload || !payload.length) return null;
+  return (
+    <div style={{ background: '#fcfcfb', border: '1px solid #e1e0d9', borderRadius: '4px', padding: '8px 12px', fontSize: '12px', color: '#0b0b0b' }}>
+      <div style={{ fontWeight: '500', marginBottom: '4px' }}>{label}</div>
+      {payload.map((e, i) => (
+        <div key={i} style={{ color: e.color }}>{e.name}: {e.value > 999 ? fmt(e.value) : e.value}</div>
+      ))}
+    </div>
+  );
 };
 
 export default function Dashboard() {
@@ -43,13 +39,11 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://raw.githubusercontent.com/guya-alt/port-weekly-dashboard/main/data/metrics.json?cb=' + Date.now());
-      if (!response.ok) throw new Error('Failed to fetch data');
-      const json = await response.json();
-      // Sort oldest first, use week_start as x-axis label
-      const sorted = [...json]
-        .filter(r => r.week_start)
-        .sort((a, b) => a.week_start.localeCompare(b.week_start));
+      const url = `https://raw.githubusercontent.com/guya-alt/port-weekly-dashboard/main/data/metrics.json?t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const sorted = [...json].sort((a, b) => (a.week_start || '').localeCompare(b.week_start || ''));
       setData(sorted);
       setLastUpdate(new Date().toLocaleString('en-IL', { timeZone: 'Asia/Jerusalem' }));
       setError(null);
@@ -60,7 +54,7 @@ export default function Dashboard() {
     }
   };
 
-  if (loading && data.length === 0) return <div style={{ padding: '32px', textAlign: 'center' }}>Loading dashboard...</div>;
+  if (loading && data.length === 0) return <div style={{ padding: '32px', textAlign: 'center' }}>Loading...</div>;
 
   return (
     <div style={{ padding: '24px', maxWidth: '1000px', margin: '0 auto' }}>
@@ -71,7 +65,6 @@ export default function Dashboard() {
         {error && <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#d03b3b' }}>⚠ {error}</p>}
       </div>
 
-      {/* ARR KPI Card */}
       <div style={{ marginBottom: '24px' }}>
         <div style={{ background: '#fcfcfb', border: '1px solid #e1e0d9', borderRadius: '8px', padding: '20px 24px' }}>
           <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#52514e' }}>Total ARR</p>
@@ -81,18 +74,18 @@ export default function Dashboard() {
       </div>
 
       {data.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '32px', color: '#52514e' }}>No data available.</div>
+        <div style={{ textAlign: 'center', padding: '32px', color: '#d03b3b' }}>No data — check console</div>
       ) : (
         <>
-          <ChartCard title="Opp ARR">
+          <ChartCard title={`Opp ARR (${data.length} weeks)`}>
             <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={data} margin={{ top: 24, right: 16, bottom: 60, left: 10 }}>
+              <LineChart data={data} margin={{ top: 24, right: 16, bottom: 70, left: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e1e0d9" vertical={false} />
-                <XAxis dataKey="week_start" tick={{ fontSize: 11, fill: '#898781' }} angle={-45} textAnchor="end" height={70} interval={0} />
+                <XAxis dataKey="week_start" tick={{ fontSize: 10, fill: '#898781' }} angle={-45} textAnchor="end" height={70} interval={0} />
                 <YAxis tick={{ fontSize: 11, fill: '#898781' }} tickFormatter={fmt} width={60} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line type="monotone" dataKey="opp_arr" name="Opp ARR" stroke="#36A2EB" strokeWidth={2} dot={{ r: 4, fill: '#36A2EB', stroke: '#fcfcfb', strokeWidth: 2 }}>
-                  <LabelList dataKey="opp_arr" position="top" formatter={fmt} style={{ fontSize: 10, fill: '#52514e' }} />
+                  <LabelList dataKey="opp_arr" position="top" formatter={fmt} style={{ fontSize: 9, fill: '#52514e' }} />
                 </Line>
               </LineChart>
             </ResponsiveContainer>
@@ -100,9 +93,9 @@ export default function Dashboard() {
 
           <ChartCard title="Meetings count">
             <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={data} margin={{ top: 24, right: 16, bottom: 60, left: 10 }}>
+              <LineChart data={data} margin={{ top: 24, right: 16, bottom: 70, left: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e1e0d9" vertical={false} />
-                <XAxis dataKey="week_start" tick={{ fontSize: 11, fill: '#898781' }} angle={-45} textAnchor="end" height={70} interval={0} />
+                <XAxis dataKey="week_start" tick={{ fontSize: 10, fill: '#898781' }} angle={-45} textAnchor="end" height={70} interval={0} />
                 <YAxis tick={{ fontSize: 11, fill: '#898781' }} width={40} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line type="monotone" dataKey="meetings_count" name="Meetings" stroke="#FF9F40" strokeWidth={2} dot={{ r: 4, fill: '#FF9F40', stroke: '#fcfcfb', strokeWidth: 2 }}>
@@ -114,9 +107,9 @@ export default function Dashboard() {
 
           <ChartCard title="New signups">
             <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={data} margin={{ top: 24, right: 16, bottom: 60, left: 10 }}>
+              <LineChart data={data} margin={{ top: 24, right: 16, bottom: 70, left: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e1e0d9" vertical={false} />
-                <XAxis dataKey="week_start" tick={{ fontSize: 11, fill: '#898781' }} angle={-45} textAnchor="end" height={70} interval={0} />
+                <XAxis dataKey="week_start" tick={{ fontSize: 10, fill: '#898781' }} angle={-45} textAnchor="end" height={70} interval={0} />
                 <YAxis tick={{ fontSize: 11, fill: '#898781' }} width={40} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line type="monotone" dataKey="new_signup_count" name="New signups" stroke="#9966FF" strokeWidth={2} dot={{ r: 4, fill: '#9966FF', stroke: '#fcfcfb', strokeWidth: 2 }}>
