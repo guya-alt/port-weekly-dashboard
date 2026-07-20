@@ -52,7 +52,7 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://raw.githubusercontent.com/YOUR_USERNAME/port-weekly-dashboard/main/data/metrics.json');
+      const response = await fetch('https://raw.githubusercontent.com/guya-alt/port-weekly-dashboard/main/data/metrics.json');
       if (!response.ok) throw new Error('Failed to fetch data');
       const json = await response.json();
       setData(json);
