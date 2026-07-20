@@ -10,7 +10,44 @@ const fmt = (v) => {
   return `${sign}$${Math.round(abs)}`;
 };
 
-const ChartCard = ({ title, color, dataKey, data, formatter }) => {
+const SmartLabel = ({ x, y, value, index, data, formatter, color }) => {
+  if (value === null || value === undefined) return null;
+  const label = formatter ? formatter(value) : String(value);
+  const prev = index > 0 ? data[index - 1] : null;
+  const next = index < data.length - 1 ? data[index + 1] : null;
+  const MIN_DIFF_PX = 36;
+  if (prev !== null) {
+    const prevX = x - (600 / data.length);
+    if (Math.abs(x - prevX) < MIN_DIFF_PX) return null;
+  }
+  return (
+    <text x={x} y={y - 8} textAnchor="middle" fontSize={9} fill="#52514e">{label}</text>
+  );
+};
+
+const sparsify = (data, dataKey, formatter) => {
+  if (!data || data.length === 0) return [];
+  const MIN_GAP = 3;
+  const result = [];
+  let lastShown = -MIN_GAP;
+  data.forEach((d, i) => {
+    const v = d[dataKey];
+    const prev = i > 0 ? data[i - 1][dataKey] : null;
+    const next = i < data.length - 1 ? data[i + 1][dataKey] : null;
+    const isFirst = i === 0;
+    const isLast = i === data.length - 1;
+    const isPeak = prev !== null && next !== null && v >= prev && v >= next && v > prev;
+    const isTrough = prev !== null && next !== null && v <= prev && v <= next && v < prev;
+    const show = isFirst || isLast || isPeak || isTrough || (i - lastShown >= MIN_GAP);
+    result.push(show ? (formatter ? formatter(v) : v) : '');
+    if (show) lastShown = i;
+  });
+  return result;
+};
+
+const ChartCard = ({ title, subtitle, color, dataKey, data, formatter }) => {
+  const labels = sparsify(data, dataKey, formatter);
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload || !payload.length) return null;
     const v = payload[0].value;
@@ -22,17 +59,27 @@ const ChartCard = ({ title, color, dataKey, data, formatter }) => {
     );
   };
 
+  const CustomLabelRenderer = (props) => {
+    const { x, y, index } = props;
+    const label = labels[index];
+    if (!label && label !== 0) return null;
+    return <text x={x} y={y - 9} textAnchor="middle" fontSize={9} fill="#52514e">{label}</text>;
+  };
+
   return (
-    <div style={{ background: '#fcfcfb', border: '1px solid #e1e0d9', borderRadius: '8px', padding: '14px 14px 8px' }}>
-      <h3 style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '500', color: '#0b0b0b' }}>{title}</h3>
-      <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={data} margin={{ top: 18, right: 8, bottom: 55, left: 0 }}>
+    <div style={{ background: '#fcfcfb', border: '1px solid #e1e0d9', borderRadius: '8px', padding: '16px 16px 8px' }}>
+      <div style={{ marginBottom: '10px' }}>
+        <h3 style={{ margin: '0 0 2px 0', fontSize: '13px', fontWeight: '500', color: '#0b0b0b' }}>{title}</h3>
+        <p style={{ margin: '0', fontSize: '11px', color: '#898781' }}>{subtitle}</p>
+      </div>
+      <ResponsiveContainer width="100%" height={260}>
+        <LineChart data={data} margin={{ top: 22, right: 10, bottom: 60, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e1e0d9" vertical={false} />
-          <XAxis dataKey="week_start" tick={{ fontSize: 9, fill: '#898781' }} angle={-45} textAnchor="end" height={60} interval={2} />
-          <YAxis tick={{ fontSize: 10, fill: '#898781' }} tickFormatter={formatter || (v => v)} width={formatter ? 55 : 35} />
+          <XAxis dataKey="week_start" tick={{ fontSize: 9, fill: '#898781' }} angle={-45} textAnchor="end" height={65} interval={2} />
+          <YAxis tick={{ fontSize: 10, fill: '#898781' }} tickFormatter={formatter || (v => v)} width={formatter ? 58 : 35} />
           <Tooltip content={<CustomTooltip />} />
           <Line type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} dot={{ r: 3, fill: color, stroke: '#fcfcfb', strokeWidth: 2 }}>
-            <LabelList dataKey={dataKey} position="top" formatter={formatter || (v => v)} style={{ fontSize: 9, fill: '#52514e' }} />
+            <LabelList content={CustomLabelRenderer} />
           </Line>
         </LineChart>
       </ResponsiveContainer>
@@ -54,7 +101,6 @@ export default function Dashboard() {
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
-      // Sort oldest first, exclude any row where cumulative_arr is missing or week has zeros across all metrics
       const today = new Date().toISOString().substring(0, 10);
       const sorted = [...json]
         .filter(r => r.week_start && r.week_start < today)
@@ -69,7 +115,7 @@ export default function Dashboard() {
   if (loading && data.length === 0) return <div style={{ padding: '32px', textAlign: 'center' }}>Loading...</div>;
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
+    <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ marginBottom: '20px' }}>
         <h1 style={{ margin: '0 0 4px 0', fontSize: '20px', fontWeight: '500', color: '#0b0b0b' }}>Weekly metrics dashboard</h1>
         <p style={{ margin: '0', fontSize: '12px', color: '#52514e' }}>
@@ -83,10 +129,36 @@ export default function Dashboard() {
         <div style={{ textAlign: 'center', padding: '32px', color: '#d03b3b' }}>No data</div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-          <ChartCard title="ARR trend" color="#4BC0C0" dataKey="cumulative_arr" data={data} formatter={fmt} />
-          <ChartCard title="Opp ARR" color="#36A2EB" dataKey="opp_arr" data={data} formatter={fmt} />
-          <ChartCard title="Meetings count" color="#FF9F40" dataKey="meetings_count" data={data} />
-          <ChartCard title="New signups" color="#9966FF" dataKey="new_signup_count" data={data} />
+          <ChartCard
+            title="ARR trend"
+            subtitle="Cumulative net new ARR (Closed Won minus Churn)"
+            color="#4BC0C0"
+            dataKey="cumulative_arr"
+            data={data}
+            formatter={fmt}
+          />
+          <ChartCard
+            title="Opp ARR"
+            subtitle="ARR of newly qualified opportunities"
+            color="#36A2EB"
+            dataKey="opp_arr"
+            data={data}
+            formatter={fmt}
+          />
+          <ChartCard
+            title="Meetings count"
+            subtitle="New deals created by AEs per week"
+            color="#FF9F40"
+            dataKey="meetings_count"
+            data={data}
+          />
+          <ChartCard
+            title="New signups"
+            subtitle="New orgs not part of an existing account"
+            color="#9966FF"
+            dataKey="new_signup_count"
+            data={data}
+          />
         </div>
       )}
 
