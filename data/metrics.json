@@ -1,0 +1,130 @@
+[
+  {
+    "week_label": "2026-07-20 - 2026-07-26",
+    "net_new_arr": 0,
+    "opp_arr": 0,
+    "meetings_count": 0,
+    "won_arr": 0,
+    "new_signup_count": 0
+  },
+  {
+    "week_label": "2026-07-13 - 2026-07-19",
+    "net_new_arr": 123072,
+    "opp_arr": 736883,
+    "meetings_count": 22,
+    "won_arr": 141072,
+    "new_signup_count": 68
+  },
+  {
+    "week_label": "2026-07-06 - 2026-07-12",
+    "net_new_arr": 0,
+    "opp_arr": 1233100,
+    "meetings_count": 22,
+    "won_arr": 0,
+    "new_signup_count": 77
+  },
+  {
+    "week_label": "2026-06-29 - 2026-07-05",
+    "net_new_arr": 1008372,
+    "opp_arr": 1789662,
+    "meetings_count": 32,
+    "won_arr": 1080372,
+    "new_signup_count": 53
+  },
+  {
+    "week_label": "2026-06-22 - 2026-06-28",
+    "net_new_arr": 2137509,
+    "opp_arr": 466900,
+    "meetings_count": 51,
+    "won_arr": 2137509,
+    "new_signup_count": 72
+  },
+  {
+    "week_label": "2026-06-15 - 2026-06-21",
+    "net_new_arr": 49037,
+    "opp_arr": 100000,
+    "meetings_count": 19,
+    "won_arr": 49037,
+    "new_signup_count": 90
+  },
+  {
+    "week_label": "2026-06-08 - 2026-06-14",
+    "net_new_arr": 119100,
+    "opp_arr": 818000,
+    "meetings_count": 73,
+    "won_arr": 161100,
+    "new_signup_count": 86
+  },
+  {
+    "week_label": "2026-06-01 - 2026-06-07",
+    "net_new_arr": 101235,
+    "opp_arr": 1276700,
+    "meetings_count": 20,
+    "won_arr": 101235,
+    "new_signup_count": 79
+  },
+  {
+    "week_label": "2026-05-25 - 2026-05-31",
+    "net_new_arr": 146700,
+    "opp_arr": 2674000,
+    "meetings_count": 43,
+    "won_arr": 168300,
+    "new_signup_count": 73
+  },
+  {
+    "week_label": "2026-05-18 - 2026-05-24",
+    "net_new_arr": 134548,
+    "opp_arr": 737550,
+    "meetings_count": 30,
+    "won_arr": 134548,
+    "new_signup_count": 79
+  },
+  {
+    "week_label": "2026-05-11 - 2026-05-17",
+    "net_new_arr": 10375,
+    "opp_arr": 797000,
+    "meetings_count": 20,
+    "won_arr": 10375,
+    "new_signup_count": 98
+  },
+  {
+    "week_label": "2026-05-04 - 2026-05-10",
+    "net_new_arr": 0,
+    "opp_arr": 362975,
+    "meetings_count": 12,
+    "won_arr": 0,
+    "new_signup_count": 94
+  },
+  {
+    "week_label": "2026-04-27 - 2026-05-03",
+    "net_new_arr": 68803,
+    "opp_arr": 650450,
+    "meetings_count": 18,
+    "won_arr": 271779,
+    "new_signup_count": 64
+  },
+  {
+    "week_label": "2026-04-20 - 2026-04-26",
+    "net_new_arr": -13050,
+    "opp_arr": 616000,
+    "meetings_count": 22,
+    "won_arr": 8550,
+    "new_signup_count": 80
+  },
+  {
+    "week_label": "2026-04-13 - 2026-04-19",
+    "net_new_arr": 21745,
+    "opp_arr": 1886705,
+    "meetings_count": 16,
+    "won_arr": 21745,
+    "new_signup_count": 95
+  },
+  {
+    "week_label": "2026-04-06 - 2026-04-12",
+    "net_new_arr": 8600,
+    "opp_arr": 722130,
+    "meetings_count": 89,
+    "won_arr": 8600,
+    "new_signup_count": 81
+  }
+]
