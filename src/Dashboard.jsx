@@ -106,7 +106,13 @@ export default function Dashboard() {
         .filter(r => r.week_start && r.week_start < today)
         .sort((a, b) => a.week_start.localeCompare(b.week_start));
       setData(sorted);
-      setLastUpdate(new Date().toLocaleString('en-IL', { timeZone: 'Asia/Jerusalem' }));
+      // Compute week-ending date (Sunday) from last data point
+      const lastWeek = sorted[sorted.length - 1]?.week_start;
+      if (lastWeek) {
+        const ws = new Date(lastWeek + 'T00:00:00Z');
+        ws.setUTCDate(ws.getUTCDate() + 6);
+        setLastUpdate('Week ending ' + ws.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }));
+      }
       setError(null);
     } catch (err) { setError(err.message); }
     finally { setLoading(false); }
@@ -168,4 +174,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
 
