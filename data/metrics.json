@@ -1,12 +1,5 @@
 [
   {
-    "week_start": "2026-04-06",
-    "opp_arr": 422000,
-    "meetings_count": 89,
-    "new_signup_count": 81,
-    "cumulative_arr": 17874065
-  },
-  {
     "week_start": "2026-04-13",
     "opp_arr": 1350100,
     "meetings_count": 16,
@@ -110,5 +103,12 @@
     "meetings_count": 26,
     "new_signup_count": 91,
     "cumulative_arr": 21771451
+  },
+  {
+    "week_start": "2026-07-27",
+    "opp_arr": 438000,
+    "meetings_count": 37,
+    "new_signup_count": 76,
+    "cumulative_arr": 22023251
   }
 ]
