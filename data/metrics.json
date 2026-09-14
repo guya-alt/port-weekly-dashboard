@@ -1,12 +1,5 @@
 [
   {
-    "week_start": "2026-05-18",
-    "opp_arr": 709800,
-    "meetings_count": 30,
-    "new_signup_count": 78,
-    "cumulative_arr": 17868006
-  },
-  {
     "week_start": "2026-05-25",
     "opp_arr": 2674000,
     "meetings_count": 43,
@@ -50,14 +43,14 @@
   },
   {
     "week_start": "2026-07-06",
-    "opp_arr": 879000,
+    "opp_arr": 859000,
     "meetings_count": 21,
     "new_signup_count": 76,
     "cumulative_arr": 21565559
   },
   {
     "week_start": "2026-07-13",
-    "opp_arr": 411000,
+    "opp_arr": 331000,
     "meetings_count": 20,
     "new_signup_count": 69,
     "cumulative_arr": 21706891
@@ -106,9 +99,16 @@
   },
   {
     "week_start": "2026-08-31",
-    "opp_arr": 816000,
-    "meetings_count": 29,
-    "new_signup_count": 108,
+    "opp_arr": 804000,
+    "meetings_count": 28,
+    "new_signup_count": 117,
     "cumulative_arr": 22201214
+  },
+  {
+    "week_start": "2026-09-07",
+    "opp_arr": 330000,
+    "meetings_count": 29,
+    "new_signup_count": 65,
+    "cumulative_arr": 22239214
   }
 ]
