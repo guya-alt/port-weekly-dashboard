@@ -1,12 +1,5 @@
 [
   {
-    "week_start": "2026-05-25",
-    "opp_arr": 2674000,
-    "meetings_count": 43,
-    "new_signup_count": 72,
-    "cumulative_arr": 18036306
-  },
-  {
     "week_start": "2026-06-01",
     "opp_arr": 1240000,
     "meetings_count": 20,
@@ -22,7 +15,7 @@
   },
   {
     "week_start": "2026-06-15",
-    "opp_arr": 100000,
+    "opp_arr": 300000,
     "meetings_count": 19,
     "new_signup_count": 89,
     "cumulative_arr": 18347678
@@ -36,7 +29,7 @@
   },
   {
     "week_start": "2026-06-29",
-    "opp_arr": 1379000,
+    "opp_arr": 1179000,
     "meetings_count": 31,
     "new_signup_count": 51,
     "cumulative_arr": 21565559
@@ -50,7 +43,7 @@
   },
   {
     "week_start": "2026-07-13",
-    "opp_arr": 331000,
+    "opp_arr": 243000,
     "meetings_count": 20,
     "new_signup_count": 69,
     "cumulative_arr": 21706891
@@ -72,43 +65,50 @@
   {
     "week_start": "2026-08-03",
     "opp_arr": 899000,
-    "meetings_count": 20,
+    "meetings_count": 19,
     "new_signup_count": 95,
     "cumulative_arr": 22001069
   },
   {
     "week_start": "2026-08-10",
     "opp_arr": 531000,
-    "meetings_count": 24,
+    "meetings_count": 23,
     "new_signup_count": 79,
     "cumulative_arr": 21994949
   },
   {
     "week_start": "2026-08-17",
-    "opp_arr": 900000,
+    "opp_arr": 810000,
     "meetings_count": 26,
     "new_signup_count": 159,
     "cumulative_arr": 21994949
   },
   {
     "week_start": "2026-08-24",
-    "opp_arr": 840000,
+    "opp_arr": 850000,
     "meetings_count": 26,
     "new_signup_count": 96,
     "cumulative_arr": 22097574
   },
   {
     "week_start": "2026-08-31",
-    "opp_arr": 804000,
-    "meetings_count": 28,
-    "new_signup_count": 117,
+    "opp_arr": 934000,
+    "meetings_count": 27,
+    "new_signup_count": 115,
     "cumulative_arr": 22201214
   },
   {
     "week_start": "2026-09-07",
-    "opp_arr": 330000,
-    "meetings_count": 29,
-    "new_signup_count": 65,
+    "opp_arr": 340000,
+    "meetings_count": 27,
+    "new_signup_count": 88,
     "cumulative_arr": 22239214
+  },
+  {
+    "week_start": "2026-09-14",
+    "opp_arr": 1062200,
+    "meetings_count": 33,
+    "new_signup_count": 92,
+    "cumulative_arr": 22095214
   }
 ]
